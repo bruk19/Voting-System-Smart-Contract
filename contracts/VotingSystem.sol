@@ -11,4 +11,9 @@ contract VotingSystem {
     bool isTimeDuration;
     bool isVoted;
   }
+
+  address public owner;
+  mapping(string =>Vote) public voteInfo;
+  string[] public createdVoteList;
+  
 }
