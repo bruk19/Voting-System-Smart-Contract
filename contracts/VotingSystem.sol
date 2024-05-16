@@ -15,5 +15,9 @@ contract VotingSystem {
   address public owner;
   mapping(string =>Vote) public voteInfo;
   string[] public createdVoteList;
-  
+
+  constructor () {
+    owner = msg.sender;
+  }
+
 }
