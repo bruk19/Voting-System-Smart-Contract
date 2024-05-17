@@ -20,15 +20,26 @@ contract VotingSystem {
         owner = msg.sender;
     }
 
-    function createVoteSystem(string memory _voteName, string[] memory _votedNameList, uint _timeDuration) public {
-      Vote storage vote = voteInfo[_voteName];
+    event _createVoteSystem(
+        string voteName,
+        string[] _voteNameList,
+        uint _timeDuration
+    );
 
-      vote.voteCreater = msg.sender;
-      createdVoteList.push(_voteName);
-      vote.timeDuration = _timeDuration;
+    function createVoteSystem(
+        string memory _voteName,
+        string[] memory _votedNameList,
+        uint _timeDuration
+    ) public {
+        Vote storage vote = voteInfo[_voteName];
 
-      for( uint i =0; i<_votedNameList.length; i++){
-        vote.votedList.push(_votedNameList[i]);
-      }
+        vote.voteCreater = msg.sender;
+        createdVoteList.push(_voteName);
+        vote.timeDuration = _timeDuration;
+
+        for (uint i = 0; i < _votedNameList.length; i++) {
+            vote.votedList.push(_votedNameList[i]);
+        }
+        emit _createVoteSystem(_voteName, _votedNameList, _timeDuration);
     }
 }
