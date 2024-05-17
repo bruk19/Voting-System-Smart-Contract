@@ -21,6 +21,14 @@ contract VotingSystem {
     }
 
     function createVoteSystem(string memory _voteName, string[] memory _votedNameList, uint _timeDuration) public {
-      
+      Vote storage vote = voteInfo[_voteName];
+
+      vote.voteCreater = msg.sender;
+      createdVoteList.push(_voteName);
+      vote.timeDuration = _timeDuration;
+
+      for( uint i =0; i<_votedNameList.length; i++){
+        vote.votedList.push(_votedNameList[i]);
+      }
     }
 }
