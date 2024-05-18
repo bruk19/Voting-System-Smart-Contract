@@ -128,4 +128,12 @@ contract VotingSystem {
         Vote storage vote = voteInfo[_voteName];
         return vote.voterAddress;
     }
+
+    function getVoteValue(
+        string memory _voteName,
+        string memory _votedName
+    ) public view returns (uint) {
+        Vote storage vote = voteInfo[_voteName];
+        return vote.numVoted[_votedName];
+    }
 }
