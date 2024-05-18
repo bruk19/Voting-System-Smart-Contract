@@ -26,6 +26,8 @@ contract VotingSystem {
         uint _timeDuration
     );
 
+    event _voting(address _voter, string _voteName, string _votedName);
+
     function createVoteSystem(
         string memory _voteName,
         string[] memory _votedNameList,
@@ -61,5 +63,7 @@ contract VotingSystem {
         vote.voterAddress.push(msg.sender);
         vote.numVoted[_voteName]++;
         vote.isVoted = true;
+
+        emit _voting(msg.sender, _voteName, _votedName);
     }
 }
