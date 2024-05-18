@@ -31,6 +31,7 @@ contract VotingSystem {
         string[] memory _votedNameList,
         uint _timeDuration
     ) public {
+        require(checkVoteName(_voteName), "Vote Name is already created");
         Vote storage vote = voteInfo[_voteName];
 
         vote.voteCreater = msg.sender;
