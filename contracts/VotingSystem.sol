@@ -36,7 +36,7 @@ contract VotingSystem {
 
         vote.voteCreater = msg.sender;
         createdVoteList.push(_voteName);
-        vote.timeDuration = _timeDuration;
+             vote.timeDuration = block.timestamp + _timeDuration * 1 days;
 
         for (uint i = 0; i < _votedNameList.length; i++) {
             vote.votedList.push(_votedNameList[i]);
