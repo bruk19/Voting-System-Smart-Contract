@@ -36,7 +36,7 @@ contract VotingSystem {
 
         vote.voteCreater = msg.sender;
         createdVoteList.push(_voteName);
-             vote.timeDuration = block.timestamp + _timeDuration * 1 days;
+        vote.timeDuration = block.timestamp + _timeDuration * 1 days;
 
         for (uint i = 0; i < _votedNameList.length; i++) {
             vote.votedList.push(_votedNameList[i]);
@@ -54,5 +54,12 @@ contract VotingSystem {
             }
         }
         return true;
+    }
+
+    function voting(string memory _voteName, string memory _votedName) public {
+        Vote storage vote = voteInfo[_voteName];
+        vote.voterAddress.push(msg.sender);
+        vote.numVoted[_voteName]++;
+        vote.isVoted = true;
     }
 }
