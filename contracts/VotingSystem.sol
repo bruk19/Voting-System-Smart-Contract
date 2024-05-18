@@ -95,4 +95,20 @@ contract VotingSystem {
         }
         return true;
     }
+
+    function checkVotedNameList(
+        string memory _voteName,
+        string memory _votedName
+    ) internal view returns (bool) {
+        Vote storage vote = voteInfo[_voteName];
+        for (uint i = 0; i < vote.votedList.length; i++) {
+            if (
+                keccak256(bytes(vote.votedList[i])) ==
+                (keccak256(bytes(_votedName)))
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
