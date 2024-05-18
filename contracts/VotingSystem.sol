@@ -63,6 +63,7 @@ contract VotingSystem {
         require(IsVoteNameCreated(_voteName), "The vote is not created");
         require(block.timestamp <= vote.timeDuration, "The voting time is end");
         require(isAddressVoted(_voteName), "the address is already vote");
+        require(checkVotedNameList(_voteName, _votedName), "The name is not on the voting list");
         vote.voterAddress.push(msg.sender);
         vote.numVoted[_voteName]++;
         vote.isVoted = true;
