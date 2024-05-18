@@ -46,7 +46,9 @@ contract VotingSystem {
         emit _createVoteSystem(_voteName, _votedNameList, _timeDuration);
     }
 
-    function checkVoteName(string memory _voteName) public view returns (bool) {
+    function checkVoteName(
+        string memory _voteName
+    ) internal view returns (bool) {
         for (uint i = 0; i < createdVoteList.length; i++) {
             if (
                 keccak256(bytes(createdVoteList[i])) ==
@@ -76,7 +78,7 @@ contract VotingSystem {
 
     function IsVoteNameCreated(
         string memory _voteName
-    ) public view returns (bool) {
+    ) internal view returns (bool) {
         for (uint i = 0; i < createdVoteList.length; i++) {
             if (
                 keccak256(bytes(createdVoteList[i])) ==
@@ -118,5 +120,12 @@ contract VotingSystem {
 
     function getVoteNames() public view returns (string[] memory) {
         return createdVoteList;
+    }
+
+    function getVoterAddress(
+        string memory _voteName
+    ) public view returns (address[] memory) {
+        Vote storage vote = voteInfo[_voteName];
+        return vote.voterAddress;
     }
 }
