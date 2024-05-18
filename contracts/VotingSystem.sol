@@ -42,4 +42,16 @@ contract VotingSystem {
         }
         emit _createVoteSystem(_voteName, _votedNameList, _timeDuration);
     }
+
+    function checkVoteName(string memory _voteName) public view returns (bool) {
+        for (uint i = 0; i < createdVoteList.length; i++) {
+            if (
+                keccak256(bytes(createdVoteList[i])) ==
+                (keccak256(bytes(_voteName)))
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
