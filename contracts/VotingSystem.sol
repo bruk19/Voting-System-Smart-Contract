@@ -62,6 +62,7 @@ contract VotingSystem {
         Vote storage vote = voteInfo[_voteName];
         require(IsVoteNameCreated(_voteName), "The vote is not created");
         require(block.timestamp <= vote.timeDuration, "The voting time is end");
+        require(isAddressVoted(_voteName), "the address is already vote");
         vote.voterAddress.push(msg.sender);
         vote.numVoted[_voteName]++;
         vote.isVoted = true;
@@ -81,5 +82,17 @@ contract VotingSystem {
             }
         }
         return false;
+    }
+
+    function isAddressVoted(
+        string memory _voteName
+    ) internal view returns (bool) {
+        Vote storage vote = voteInfo[_voteName];
+        for (uint i = 0; i < vote.voterAddress.length; i++) {
+            if (vote.voterAddress[i] == msg.sender) {
+                return false;
+            }
+        }
+        return true;
     }
 }
