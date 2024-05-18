@@ -60,6 +60,8 @@ contract VotingSystem {
 
     function voting(string memory _voteName, string memory _votedName) public {
         Vote storage vote = voteInfo[_voteName];
+        require(IsVoteNameCreated(_voteName), "The vote is not created");
+        require(block.timestamp <= vote.timeDuration, "The voting time is end");
         vote.voterAddress.push(msg.sender);
         vote.numVoted[_voteName]++;
         vote.isVoted = true;
