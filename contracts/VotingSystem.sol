@@ -20,7 +20,120 @@ contract VotingSystem {
         owner = msg.sender;
     }
 
-    function createVoteSystem(string memory _voteName, string[] memory _votedNameList, uint _timeDuration) public {
-      
+    event _createVoteSystem(
+        string voteName,
+        string[] _voteNameList,
+        uint _timeDuration
+    );
+
+    event _voting(address _voter, string _voteName, string _votedName);
+
+    function createVoteSystem(
+        string memory _voteName,
+        string[] memory _votedNameList,
+        uint _timeDuration
+    ) public {
+        require(checkVoteName(_voteName), "Vote Name is already created");
+        Vote storage vote = voteInfo[_voteName];
+
+        vote.voteCreater = msg.sender;
+        createdVoteList.push(_voteName);
+        vote.timeDuration = block.timestamp + _timeDuration * 1 days;
+
+        for (uint i = 0; i < _votedNameList.length; i++) {
+            vote.votedList.push(_votedNameList[i]);
+        }
+        emit _createVoteSystem(_voteName, _votedNameList, _timeDuration);
+    }
+
+    function checkVoteName(
+        string memory _voteName
+    ) internal view returns (bool) {
+        for (uint i = 0; i < createdVoteList.length; i++) {
+            if (
+                keccak256(bytes(createdVoteList[i])) ==
+                (keccak256(bytes(_voteName)))
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function voting(string memory _voteName, string memory _votedName) public {
+        Vote storage vote = voteInfo[_voteName];
+        require(IsVoteNameCreated(_voteName), "The vote is not created");
+        require(block.timestamp <= vote.timeDuration, "The voting time is end");
+        require(isAddressVoted(_voteName), "the address is already vote");
+        require(
+            checkVotedNameList(_voteName, _votedName),
+            "The name is not on the voting list"
+        );
+        vote.voterAddress.push(msg.sender);
+        vote.numVoted[_voteName]++;
+        vote.isVoted = true;
+
+        emit _voting(msg.sender, _voteName, _votedName);
+    }
+
+    function IsVoteNameCreated(
+        string memory _voteName
+    ) internal view returns (bool) {
+        for (uint i = 0; i < createdVoteList.length; i++) {
+            if (
+                keccak256(bytes(createdVoteList[i])) ==
+                (keccak256(bytes(_voteName)))
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function isAddressVoted(
+        string memory _voteName
+    ) internal view returns (bool) {
+        Vote storage vote = voteInfo[_voteName];
+        for (uint i = 0; i < vote.voterAddress.length; i++) {
+            if (vote.voterAddress[i] == msg.sender) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function checkVotedNameList(
+        string memory _voteName,
+        string memory _votedName
+    ) internal view returns (bool) {
+        Vote storage vote = voteInfo[_voteName];
+        for (uint i = 0; i < vote.votedList.length; i++) {
+            if (
+                keccak256(bytes(vote.votedList[i])) ==
+                (keccak256(bytes(_votedName)))
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function getVoteNames() public view returns (string[] memory) {
+        return createdVoteList;
+    }
+
+    function getVoterAddress(
+        string memory _voteName
+    ) public view returns (address[] memory) {
+        Vote storage vote = voteInfo[_voteName];
+        return vote.voterAddress;
+    }
+
+    function getVoteValue(
+        string memory _voteName,
+        string memory _votedName
+    ) public view returns (uint) {
+        Vote storage vote = voteInfo[_voteName];
+        return vote.numVoted[_votedName];
     }
 }
