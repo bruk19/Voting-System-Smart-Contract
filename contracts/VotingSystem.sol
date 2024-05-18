@@ -66,4 +66,18 @@ contract VotingSystem {
 
         emit _voting(msg.sender, _voteName, _votedName);
     }
+
+    function IsVoteNameCreated(
+        string memory _voteName
+    ) public view returns (bool) {
+        for (uint i = 0; i < createdVoteList.length; i++) {
+            if (
+                keccak256(bytes(createdVoteList[i])) ==
+                (keccak256(bytes(_voteName)))
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
