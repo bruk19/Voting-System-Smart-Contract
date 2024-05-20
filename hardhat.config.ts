@@ -26,6 +26,24 @@ const config: HardhatUserConfig = {
    etherscan: {
     apiKey: ETHERSCAN_API_KEY,
   },
+  namedAccounts: {
+    owner: {
+      default: 0,
+    },
+    voter1: {
+      default:  1,
+    },
+    voter2: {
+      default: 2
+    }
+  },
+  paths: {
+    sources: "./contracts",
+    tests: "./test",
+  },
+  mocha: {
+    timeout: 40000,
+  },
 
 }
 
