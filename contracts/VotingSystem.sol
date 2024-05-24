@@ -143,4 +143,11 @@ contract VotingSystem {
         Vote storage vote = voteInfo[_voteName];
         return vote.numVoted[_voteName];
     }
+
+    function getVotedList(
+        string memory _voteName
+    ) public view returns (string[] memory) {
+        Vote storage vote = voteInfo[_voteName];
+        return vote.votedList;
+    }
 }
