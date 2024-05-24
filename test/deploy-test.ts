@@ -43,19 +43,37 @@ describe("Token contract", function () {
 
  describe("voting", function () {
   it("Should increment the vote count for the selected candidate", async function () {
+    const { votingSystem, voter1, voter2 } = await loadFixture(deployVoteFixture);
+
+    const voteName = "Election";
+    const candidateA = "Candidate A";
+    const candidateB = "Candidate B";
+    const timeDuration = 7; // 7 days
+
+    await votingSystem.createVoteSystem(voteName, [candidateA, candidateB], timeDuration);
+
+    await votingSystem.connect(voter1).voting(voteName, candidateA);
+    await votingSystem.connect(voter2).voting(voteName, candidateB)
+
+    const voteCountA = await votingSystem.getVoteValue(voteName, candidateA);
+    const voteCountB = await votingSystem.getVoteValue(voteName, candidateB)
+    expect(voteCountA).to.equal(1);
+    expect(voteCountB).to.equal(1);
+  });
+
+  it("Should not allow voting after the time duration has ended", async function () {
     const { votingSystem, voter1 } = await loadFixture(deployVoteFixture);
 
     const voteName = "Election";
     const candidate = "Candidate A";
-    const timeDuration = 7; // 7 days
+    const timeDuration = 1;
 
     await votingSystem.createVoteSystem(voteName, [candidate], timeDuration);
 
-    await votingSystem.connect(voter1).voting(voteName, candidate);
-
-    const voteCount = await votingSystem.getVoteValue(voteName, candidate);
-    expect(voteCount).to.equal(1);
-  });
+    await ethers.provider.send("evm_increaseTime", [86400 * (timeDuration + 1)]);
+    await ethers.provider.send("evm_mine");
+    await expect(votingSystem.connect(voter1).voting(voteName, candidate)).to.be.revertedWith("The voting time is end")
+  })
 });
 
   
