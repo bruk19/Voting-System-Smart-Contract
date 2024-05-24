@@ -40,5 +40,23 @@ describe("Token contract", function () {
       expect(votedList).to.deep.equal(votedNameList);
     });
   });
+
+ describe("voting", function () {
+  it("Should increment the vote count for the selected candidate", async function () {
+    const { votingSystem, voter1 } = await loadFixture(deployVoteFixture);
+
+    const voteName = "Election";
+    const candidate = "Candidate A";
+    const timeDuration = 7; // 7 days
+
+    await votingSystem.createVoteSystem(voteName, [candidate], timeDuration);
+
+    await votingSystem.connect(voter1).voting(voteName, candidate);
+
+    const voteCount = await votingSystem.getVoteValue(voteName, candidate);
+    expect(voteCount).to.equal(1);
+  });
+});
+
   
 });
