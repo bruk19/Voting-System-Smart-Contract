@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
-import type { Signer } from "ethers";
 import { ethers } from "hardhat";
+
 describe("Token contract", function () {
   async function deployVoteFixture(){
     // Get the Signers here.
@@ -10,7 +10,7 @@ describe("Token contract", function () {
     // Deploy the VotingSystem contract
     const VotingSystem = await ethers.getContractFactory("VotingSystem");
     const votingSystem = await VotingSystem.deploy();
-     votingSystem.target
+    votingSystem.target
 
     // Fixtures can return anything you consider useful for your tests
     return { votingSystem, owner, voter1, voter2 };
@@ -22,4 +22,23 @@ describe("Token contract", function () {
       expect(await votingSystem.owner()).to.equal(owner.address);
     });
   });
+
+  describe("createVoteSystem", function () {
+    it("Should create a new vote system", async function () {
+      const { votingSystem } = await loadFixture(deployVoteFixture);
+
+      const voteName = "Election";
+      const votedNameList = ["Candidate A", "Candidate B", "Candidate C"];
+      const timeDuration = 7; // 7 days
+
+      await votingSystem.createVoteSystem(voteName, votedNameList, timeDuration);
+
+      const createdVoteList = await votingSystem.getVoteNames();
+      expect(createdVoteList).to.deep.include(voteName);
+
+      const votedList = await votingSystem.getVotedList(voteName);
+      expect(votedList).to.deep.equal(votedNameList);
+    });
+  });
+  
 });
