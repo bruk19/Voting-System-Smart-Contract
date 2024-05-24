@@ -70,7 +70,7 @@ contract VotingSystem {
             "The name is not on the voting list"
         );
         vote.voterAddress.push(msg.sender);
-        vote.numVoted[_voteName]++;
+        vote.numVoted[_votedName]++;
         vote.isVoted = true;
 
         emit _voting(msg.sender, _voteName, _votedName);
