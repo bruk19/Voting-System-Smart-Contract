@@ -150,4 +150,9 @@ contract VotingSystem {
         Vote storage vote = voteInfo[_voteName];
         return vote.votedList;
     }
+
+    function getVotingTime(string memory _voteName) public view returns (uint) {
+        Vote storage vote = voteInfo[_voteName];
+        return vote.timeDuration;
+    }
 }
