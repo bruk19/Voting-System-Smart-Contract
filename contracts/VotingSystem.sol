@@ -70,7 +70,7 @@ contract VotingSystem {
             "The name is not on the voting list"
         );
         vote.voterAddress.push(msg.sender);
-        vote.numVoted[_voteName]++;
+        vote.numVoted[_votedName]++;
         vote.isVoted = true;
 
         emit _voting(msg.sender, _voteName, _votedName);
@@ -142,5 +142,17 @@ contract VotingSystem {
     ) public view returns (uint) {
         Vote storage vote = voteInfo[_voteName];
         return vote.numVoted[_voteName];
+    }
+
+    function getVotedList(
+        string memory _voteName
+    ) public view returns (string[] memory) {
+        Vote storage vote = voteInfo[_voteName];
+        return vote.votedList;
+    }
+
+    function getVotingTime(string memory _voteName) public view returns (uint) {
+        Vote storage vote = voteInfo[_voteName];
+        return vote.timeDuration;
     }
 }
